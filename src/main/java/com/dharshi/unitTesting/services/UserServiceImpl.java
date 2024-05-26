@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
             }
 
         } catch (Exception e) {
+            log.error("User registration fail: " + e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Fail: Failed to process request now. Try again later");
