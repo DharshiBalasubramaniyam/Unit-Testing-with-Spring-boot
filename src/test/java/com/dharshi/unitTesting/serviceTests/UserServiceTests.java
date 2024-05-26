@@ -4,6 +4,7 @@ import com.dharshi.unitTesting.dtos.UserDto;
 import com.dharshi.unitTesting.models.User;
 import com.dharshi.unitTesting.repositories.UserRepository;
 import com.dharshi.unitTesting.services.UserServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,14 +25,18 @@ public class UserServiceTests {
     @InjectMocks
     private UserServiceImpl userService;
 
+    private static final String TEST_NAME = "test";
+    private static final String TEST_EMAIL = "test@gmail.com";
+    private UserDto userDto;
+
+    @BeforeEach
+    void setUp() {
+        // Create a UserDto object with test data before running the tests
+        userDto = UserDto.builder().name(TEST_NAME).email(TEST_EMAIL).build();
+    }
+
     @Test
     public void registerUserSuccess() {
-        // Create a UserDto object with test data
-        UserDto userDto = UserDto.builder()
-                .name("test")
-                .email("test@gmail.com")
-                .build();
-
         // Mock the userRepository.findByEmail method to return null,
         // simulating that no user exists with the provided email
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(null);
@@ -52,12 +57,6 @@ public class UserServiceTests {
 
     @Test
     public void registerUserWithAlreadyExistsEmailFail() {
-        // Create a UserDto object with test data
-        UserDto userDto = UserDto.builder()
-                .name("test")
-                .email("test@gmail.com")
-                .build();
-
         // Mock the userRepository.findByEmail method to return a new User object,
         // simulating that a user already exists with the provided email
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(new User());
@@ -78,12 +77,6 @@ public class UserServiceTests {
 
     @Test
     public void registerUserWithInternalServerErrorFail() {
-        // Create a UserDto object with test data
-        UserDto userDto = UserDto.builder()
-                .name("test")
-                .email("test@gmail.com")
-                .build();
-
         // Mock the userRepository.findByEmail method to throw a RuntimeException,
         // simulating an unexpected error during the database operation
         when(userRepository.findByEmail(userDto.getEmail())).thenThrow(new RuntimeException());
